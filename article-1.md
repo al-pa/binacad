@@ -27,3 +27,9 @@
 
 **Источник**: [Engadget](https://www.engadget.com/2017/05/17/arm-targets-your-brain-with-new-implantable-chips/)
 [ITC](http://itc.ua/blogs/implantiruemyie-v-mozg-chipyi-arm-pozvolyat-upravlyat-protezami-siloy-myisli/)
+
+
+
+* Очень амбициозное заявление. Хотя раньше человек и представить не мог себе те вещи - без которых мы не представляем существование в наши дни. Надеюсь у ребят получится, и следующим этапом станет телепорт :)
+ P.S. Хотя порой кажется что телепорт мы увидим раньше чем построят метро на троещину хD
+   Алексей Панченко
