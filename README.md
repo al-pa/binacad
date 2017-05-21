@@ -1,4 +1,4 @@
-#Binary Academy Homework
+# Binary Academy Homework
 ___
 I'll place my task as agenda below, to see how move forward with it, and don't forget anything that i need to do.
 
