@@ -1,3 +1,4 @@
+'use strict'
 //==================DECLARATION AREA==============================
 class Fighter {
   // 1) **Створити класс “Fighter”** -->
@@ -39,10 +40,14 @@ function fight(fighter, improvedFighter, ...point) {
   // 11. Ця функція запускатиме процес гри:
   //     a) -Гравці по черзі наносять удар один одному за допомогою методу hit, що приймає відповідне значення point.
   //     b) -Якщо один із них помирає (health = 0), то гра закінчується і результат виводиться в консоль
+
+    let first, second;
     (Math.random() < 0.5) ? ([first, second] = arguments) : ([second, first] = arguments);
     //decided who will have 1st turn;
 
-    for(key of point) {
+    //Wrapper function to check if doubleHit exist
+
+    for(let key of point) {
         first.hit(second, key);
             console.log(second.health + second.name);
         if (second.health <= 0) return console.log(`${second.name} is dead, we have a winner! Congratulatin ${first.name}!`);
@@ -78,3 +83,11 @@ fight(bot1, megaBot1, 10, 20, 30);
 // console.log(megaBot1);
 
 
+
+
+//a) - block scoping (let)--------------let damage = point * this.power
+//b) - spread / rest operator-----------function fight(fighter, improvedFighter, ...point)
+//c) - default settings-----------------constructor (name="Brave Fighter", power=1, health=100)
+//d) - string interpolation------------- `${var} text` i used almost evherywhere. Really liked this thing!
+//e) - arrow functions------------------
+//f) - classes + inheritance + super----Done + Done +  super.hit(enemy, point*2)
