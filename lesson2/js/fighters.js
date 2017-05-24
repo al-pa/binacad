@@ -1,26 +1,16 @@
 'use strict'
 //==================DECLARATION AREA==============================
 class Fighter {
-  // 1) **Створити класс “Fighter”** -->
-  // 2) Клас повиненин приймати значення name, power і health. -->
-  // 3) Також клас повинен мати методи “setDamage” та “hit”. -->
-  // 4) Метод “setDamage” приймає значення “damage” і наносить урон змінюючи
-  //    значення health (health = health - damage), і виводить в консоль
-  //    строку “ health: ”. -->
-  // 5) Метод “hit” приймає значення “enemy”, “point”, і в середині викликає
-  //    метод переданого обекту “enemy.setDamage(damage)”. -->
-  //     a) “damage” вираховується наступним чином - damage = point * power, -->
-  //     b)  де point - змінний параметр, прийнятий в функцію "fight",
-  //     c) power - це властивість об'єкту який наносить урон. -->
     constructor (name="Brave Fighter", power=1, health=100) {
         this.name=name;
         this.power=parseInt(power);
         this.health=parseInt(health);
     }
+
     setDamage(damage) {
         this.health+=-damage;
         console.log(`${this.name}'s health: ${this.health}`);
-        return this.health;
+        return this.health; //Можно как то сразу обработать инфу о оставшихся НР
     }
     hit(enemy, point) {
         let damage = point * this.power;
@@ -29,61 +19,60 @@ class Fighter {
 };
 
 class ImprovedFighter extends Fighter {
-  // 6) **Створити клас ImprovedFighter, який буде наслідуватися від класу
-  //    Fighter, з його властивостями і методами.** -->
-  // 7) Для цього класу створити метод doubleHit, який буде викликати
-  //    наслідуваний метод “hit”, і передавати туди подвоєне значення “point”. -->
-  // 8) Від обох класів породити по екземпляру відповідно fighter,
-  //    improvedFighter. -->
     doubleHit(enemy, point) {
         return super.hit(enemy, point*2);
     }
 };
 
-function fight(fighter, improvedFighter, ...point) {
-  // This function must initialize battle somehow and call fighters hit
-  // functions with point inputs.
-  // 11. Ця функція запускатиме процес гри:
-  //     a) -Гравці по черзі наносять удар один одному за допомогою методу
-  //     hit, що приймає відповідне значення point.
-  //     b) -Якщо один із них помирає (health = 0), то гра закінчується і
-  //     результат виводиться в консоль
+function fight(fighter1, fighter2, ...point) {
+  // This function must initialize battle, check who will hit first with help
+  // of random and then call fighters to hit each other hard
+  // as input provide 2 objects as fighters and any number of points that will
+  // have effect on hit damage
 
-    let first, second;
-    (Math.random() < 0.5) ? ([first, second] = arguments) :
-    ([second, first] = arguments);
+    let [first, second] = firstTurn(arguments[0], arguments[1]);
     //decided who will have 1st turn;
 
-    //Wrapper function to check if doubleHit exist
-
     for(let key of point) {
-        // first.hit(second, key);
         bestHit(first, second, key);
-            // ("doubleHit" in obj) ? first.doubleHit(second, key) :
-            // first.hit(second, key)();
-        // };
-        if (second.health <= 0) return console.log(`${second.name} is dead,\
-we have a winner! Congratulatin ${first.name}!`);
-        second.hit(first, key);
-        if (first.health <= 0) return console.log(`${first.name} is dead, \
-we have a winner! Congratulatin ${second.name}!`);
+        if (second.health <= 0) return console.log(`${second.name} is dead,`
+            +`we have a winner! Congratulatin ${first.name}!`);
+        bestHit(second, first, key);
+        if (first.health <= 0) return console.log(`${first.name} is dead,`
+            +`we have a winner! Congratulatin ${second.name}!`);
     }
 
-    if (first.health < second.health) {
-        return console.log(`${first.name} loosed as he have less health \
-remains than ${second.name}!`);
-    }
-    else if (first.health > second.health) {
-        return console.log(`${second.name} loosed as he have less health \
-remains than ${first.name}!`);
-    }
-    else {return console.log("Spare!");}
+    //If noone died after provided pointsd, then.....>>
+    result = compareHealth(first, second);
+    console.log(result);
+    return result;
+};
+
+//===================SUPPORT FUNCTIONS===========================
+var firstTurn = (obj1, obj2) => {
+    //randimly decided who will have 1st turn;
+
+    return (Math.random() < 0.5) ? [obj1, obj2] : [obj2, obj1]
 };
 
 var bestHit = (obj, enemy, point) => {
+// If it is instance of ImproovedClass - it will use double hit on enemy,
+// otherwise it will use regular "hit" method
     return ("doubleHit" in obj) ? obj.doubleHit(enemy, point): obj.hit(
         enemy, point);
-}
+};
+
+var compareHealth = (obj1, obj2) => {
+    //If noone died after provided points, then we are counting "the score">>
+
+    if (obj1.health < obj2.health) {
+        return console.log(`${obj1.name} loosed as he have less health`
+            +`remains than ${obj2.name}!`);}
+    else if (obj1.health > obj2.health) {
+        return console.log(`${obj2.name} loosed as he have less health`
+            +`remains than ${obj1.name}!`);}
+    else {return console.log("Spare!");}
+};
 
   //==================CODE RUN HERE===========================
 
@@ -92,15 +81,15 @@ let bot2 = new Fighter( "Pedro", "2", 110);
 let megaBot1 = new ImprovedFighter("Serious Sam", 3, 120);
 let megaBot2 = new ImprovedFighter("Terminator", 4, 130);
 
+compareHealth(bot1, bot2);
 fight(bot1, megaBot1, 2, 10, 20);
 // fight(bot2, megaBot2, 1, 2, 3, 4, 5, 9);
 
 // console.log(bot1);
 // console.log(megaBot1);
 
-
 //a) - block scoping (let)--------------let damage = point * this.power
-//b) - spread / rest operator-----------function fight(fighter, improvedFighter, ...point)
+//b) - spread / rest operator-----------function fight(fighter, fighter2, ...point)
 //c) - default settings-----------------constructor (name="Brave Fighter", power=1, health=100)
 //d) - string interpolation-------------`${var} text` i used almost evherywhere. My favorite ferature of ES2015!
 //e) - arrow functions------------------var bestHit = (obj) => {
